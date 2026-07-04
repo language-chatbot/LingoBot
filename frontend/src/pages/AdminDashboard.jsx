@@ -497,47 +497,11 @@ export default function AdminDashboard() {
             <div className="glass-card">
               <h3 className="margin-bottom-1">Roster: {selectedGroup?.name || 'Select a Group'}</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                Assign and remove student enrollment from this learning cohort.
+                Students currently enrolled in this learning cohort.
               </p>
 
               {selectedGroup && (
                 <div>
-                  {/* Assign Form */}
-                  <div className="flex-between margin-bottom-2" style={{ gap: '1rem', background: 'rgba(255,255,255,0.01)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--glass-border)' }}>
-                    <div style={{ flex: 1 }}>
-                      <label className="form-label">Select Unassigned Student</label>
-                      <select 
-                        className="form-input form-select"
-                        value={selectedUnassignedStudent}
-                        onChange={(e) => setSelectedUnassignedStudent(e.target.value)}
-                      >
-                        <option value="">-- Choose Student --</option>
-                        {students
-                          .filter(s => !s.groups?.some(g => g.id === selectedGroup.id))
-                          .map(s => {
-                            const groupList = s.groups && s.groups.length > 0
-                              ? `[Current: ${s.groups.map(g => g.name).join(', ')}]`
-                              : '';
-                            return (
-                              <option key={s.id} value={s.id}>
-                                {s.name} ({s.email}) {groupList}
-                              </option>
-                            );
-                          })
-                        }
-                      </select>
-                    </div>
-                    <button 
-                      onClick={handleAssignStudent} 
-                      className="btn btn-primary"
-                      style={{ marginTop: '1.5rem', minHeight: '42px' }}
-                      disabled={!selectedUnassignedStudent}
-                    >
-                      <Check size={16} />
-                      <span>Assign</span>
-                    </button>
-                  </div>
-
                   {/* Active Students in this Group */}
                   <h4 className="margin-bottom-1" style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Enrolled Students ({selectedGroup.users?.length || 0})</h4>
                   <div className="table-wrapper">
@@ -547,13 +511,12 @@ export default function AdminDashboard() {
                           <th>Student Name</th>
                           <th>Email</th>
                           <th>Enrollment Date</th>
-                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         {(!selectedGroup.users || selectedGroup.users.length === 0) ? (
                           <tr>
-                            <td colSpan={4} className="text-center" style={{ color: 'var(--text-muted)' }}>
+                            <td colSpan={3} className="text-center" style={{ color: 'var(--text-muted)' }}>
                               No students enrolled in this cohort yet.
                             </td>
                           </tr>
@@ -563,15 +526,6 @@ export default function AdminDashboard() {
                               <td style={{ fontWeight: 600 }}>{u.name}</td>
                               <td>{u.email}</td>
                               <td>{new Date(u.createdAt).toLocaleDateString()}</td>
-                              <td>
-                                <button 
-                                  onClick={() => handleUnassignStudent(u.id)}
-                                  className="btn btn-secondary btn-sm text-danger"
-                                  style={{ border: '1px solid rgba(239, 68, 68, 0.2)' }}
-                                >
-                                  Unassign
-                                </button>
-                              </td>
                             </tr>
                           ))
                         )}
