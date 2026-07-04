@@ -432,108 +432,72 @@ export default function AdminDashboard() {
       case 'groups':
         return (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem' }}>
-            {/* Create Group and listing */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              <div className="glass-card">
-                <h3 className="margin-bottom-1">Create Cohort</h3>
-                <form onSubmit={handleCreateGroup}>
-                  <div className="form-group">
-                    <label className="form-label">Group Name</label>
-                    <input 
-                      type="text" 
-                      className="form-input" 
-                      placeholder="e.g. Korean Middle School" 
-                      value={groupName}
-                      onChange={(e) => setGroupName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Description</label>
-                    <textarea 
-                      className="form-input" 
-                      placeholder="Optional details..." 
-                      value={groupDesc}
-                      onChange={(e) => setGroupDesc(e.target.value)}
-                      rows={3}
-                      style={{ resize: 'vertical' }}
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                    <Plus size={16} />
-                    <span>Add Group</span>
-                  </button>
-                </form>
-              </div>
+            {/* Create Group Form */}
+            <div className="glass-card">
+              <h3 className="margin-bottom-1">Create Cohort</h3>
+              <form onSubmit={handleCreateGroup}>
+                <div className="form-group">
+                  <label className="form-label">Group Name</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="e.g. Korean Middle School" 
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Description</label>
+                  <textarea 
+                    className="form-input" 
+                    placeholder="Optional details..." 
+                    value={groupDesc}
+                    onChange={(e) => setGroupDesc(e.target.value)}
+                    rows={3}
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                  <Plus size={16} />
+                  <span>Add Group</span>
+                </button>
+              </form>
+            </div>
 
-              <div className="glass-card">
-                <h3 className="margin-bottom-1">Available Groups</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {groups.map(g => (
+            {/* Available Groups List */}
+            <div className="glass-card">
+              <h3 className="margin-bottom-1">Available Groups</h3>
+              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                All student cohorts currently configured on the platform.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {groups.length === 0 ? (
+                  <div className="text-center" style={{ color: 'var(--text-dim)', padding: '2rem' }}>
+                    No groups created yet. Use the form on the left to add one!
+                  </div>
+                ) : (
+                  groups.map(g => (
                     <div 
                       key={g.id} 
-                      className={`flex-between`} 
-                      style={{ padding: '0.75rem 1rem', background: selectedGroup?.id === g.id ? 'var(--bg-card-hover)' : 'rgba(255,255,255,0.02)', border: selectedGroup?.id === g.id ? '1px solid var(--accent-primary)' : '1px solid var(--glass-border)', borderRadius: '8px', cursor: 'pointer' }}
-                      onClick={() => handleGroupSelect(g.id)}
+                      className="flex-between" 
+                      style={{ padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
                     >
                       <div>
                         <div style={{ fontWeight: 600 }}>{g.name}</div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{g.description || 'No description'}</div>
                       </div>
                       <button 
-                        onClick={(e) => { e.stopPropagation(); handleDeleteGroup(g.id); }} 
+                        onClick={() => handleDeleteGroup(g.id)} 
                         className="btn btn-danger btn-sm" 
                         style={{ padding: '0.3rem' }}
                       >
                         <Trash2 size={14} />
                       </button>
                     </div>
-                  ))}
-                </div>
+                  ))
+                )}
               </div>
-            </div>
-
-            {/* Roster management for selected group */}
-            <div className="glass-card">
-              <h3 className="margin-bottom-1">Roster: {selectedGroup?.name || 'Select a Group'}</h3>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                Students currently enrolled in this learning cohort.
-              </p>
-
-              {selectedGroup && (
-                <div>
-                  {/* Active Students in this Group */}
-                  <h4 className="margin-bottom-1" style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Enrolled Students ({selectedGroup.users?.length || 0})</h4>
-                  <div className="table-wrapper">
-                    <table className="data-table">
-                      <thead>
-                        <tr>
-                          <th>Student Name</th>
-                          <th>Email</th>
-                          <th>Enrollment Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {(!selectedGroup.users || selectedGroup.users.length === 0) ? (
-                          <tr>
-                            <td colSpan={3} className="text-center" style={{ color: 'var(--text-muted)' }}>
-                              No students enrolled in this cohort yet.
-                            </td>
-                          </tr>
-                        ) : (
-                          selectedGroup.users.map(u => (
-                            <tr key={u.id}>
-                              <td style={{ fontWeight: 600 }}>{u.name}</td>
-                              <td>{u.email}</td>
-                              <td>{new Date(u.createdAt).toLocaleDateString()}</td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         );
