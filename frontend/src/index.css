@@ -42,9 +42,9 @@
 }
 
 body.light-mode {
-  --bg-dark: #f5f1e3; /* Old Lace */
+  --bg-dark: #ffffff; /* White */
   --bg-card: #ffffff; /* White */
-  --bg-card-hover: rgba(221, 219, 203, 0.4); /* Bone with opacity */
+  --bg-card-hover: #f7f7f7; /* Very light gray */
   --bg-input: #ffffff;
   
   --accent-primary: #1b9aaa; /* Pacific Cyan */
