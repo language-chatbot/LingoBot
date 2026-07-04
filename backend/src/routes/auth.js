@@ -268,7 +268,6 @@ After exploring the palace, we will visit a local restaurant to try some traditi
       await prisma.activity.create({
         data: {
           title: 'Reading Comprehension: Seoul History',
-          description: 'Read the text about Gyeongbokgung Palace and vocabulary terms.',
           type: 'READING',
           orderIndex: 1,
           groupId: schoolGroup.id,
@@ -279,7 +278,6 @@ After exploring the palace, we will visit a local restaurant to try some traditi
       await prisma.activity.create({
         data: {
           title: 'Seoul City Audio Tour Guide',
-          description: 'Listen to the audio guide and learn vocabulary pronunciation.',
           type: 'LISTENING',
           orderIndex: 2,
           groupId: schoolGroup.id,
@@ -290,7 +288,6 @@ After exploring the palace, we will visit a local restaurant to try some traditi
       await prisma.activity.create({
         data: {
           title: 'Seoul Travel Vlog: Visual Tour',
-          description: 'Watch the travel vlog to explore Korean street food and landmarks.',
           type: 'VIDEO',
           orderIndex: 3,
           groupId: schoolGroup.id,
@@ -301,7 +298,6 @@ After exploring the palace, we will visit a local restaurant to try some traditi
       await prisma.activity.create({
         data: {
           title: 'Tokyo Street Reading Exercise',
-          description: 'Read basic Kanji and Hiragana structures from Tokyo transit maps.',
           type: 'READING',
           orderIndex: 1,
           groupId: uniGroup.id,
