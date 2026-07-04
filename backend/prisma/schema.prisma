@@ -1,0 +1,117 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+enum ContentType {
+  READING
+  LISTENING
+  VIDEO
+}
+
+enum ActivityStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  role         Role          @default(STUDENT)
+  name         String
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  groups       Group[]
+  chatLogs     ChatLog[]
+  activityLogs ActivityLog[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Group {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  users       User[]
+  activities  Activity[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@map("groups")
+}
+
+model Activity {
+  id           Int           @id @default(autoincrement())
+  groupId      Int           @map("group_id")
+  group        Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  title        String
+  type         ContentType
+  contentId    Int           @map("content_id")
+  content      Content       @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  orderIndex   Int           @map("order_index")
+  chatLogs     ChatLog[]
+  activityLogs ActivityLog[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  @@map("activities")
+}
+
+model Content {
+  id            Int            @id @default(autoincrement())
+  type          ContentType
+  textBody      String?        @map("text_body")
+  fileUrl       String?        @map("file_url")
+  activities    Activity[]
+  glossaryTerms GlossaryTerm[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  @@map("content")
+}
+
+model GlossaryTerm {
+  id          Int      @id @default(autoincrement())
+  contentId   Int      @map("content_id")
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  term        String
+  definition  String
+  startOffset Int      @map("start_offset")
+  endOffset   Int      @map("end_offset")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("glossary_terms")
+}
+
+model ChatLog {
+  id         Int      @id @default(autoincrement())
+  studentId  Int      @map("student_id")
+  student    User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  activityId Int      @map("activity_id")
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  role       String   // "user", "assistant", "system"
+  message    String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("chat_logs")
+}
+
+model ActivityLog {
+  id          Int            @id @default(autoincrement())
+  studentId   Int            @map("student_id")
+  student     User           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  activityId  Int            @map("activity_id")
+  activity    Activity       @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  status      ActivityStatus @default(NOT_STARTED)
+  startedAt   DateTime       @default(now()) @map("started_at")
+  completedAt DateTime?      @map("completed_at")
+
+  @@map("activity_logs")
+}
