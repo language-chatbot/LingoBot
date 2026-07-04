@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [contents, setContents] = useState([]);
   const [activities, setActivities] = useState([]);
   const [students, setStudents] = useState([]);
+  const [users, setUsers] = useState([]);
 
   // Stats State
   const [stats, setStats] = useState(null);
@@ -61,12 +62,13 @@ export default function AdminDashboard() {
       setLoading(true);
       setError('');
       
-      const [groupsData, contentsData, activitiesData, studentsData, statsData] = await Promise.all([
+      const [groupsData, contentsData, activitiesData, studentsData, statsData, usersData] = await Promise.all([
         api.getGroups(),
         api.getContents(),
         api.getActivities(),
         api.getStudents(),
-        api.getAdminStats()
+        api.getAdminStats(),
+        api.getUsers()
       ]);
 
       setGroups(groupsData);
@@ -74,6 +76,7 @@ export default function AdminDashboard() {
       setActivities(activitiesData);
       setStudents(studentsData);
       setStats(statsData);
+      setUsers(usersData);
       
       if (groupsData.length > 0) {
         setSelectedGroup(groupsData[0]);
@@ -976,6 +979,79 @@ export default function AdminDashboard() {
           </div>
         );
 
+      case 'users':
+        return (
+          <div className="glass-card">
+            <h3 className="margin-bottom-1">Users List</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+              All registered administrators and student users.
+            </p>
+            <div className="table-wrapper">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined Cohorts</th>
+                    <th>Sign Up Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="text-center" style={{ color: 'var(--text-muted)' }}>
+                        No users found in the system.
+                      </td>
+                    </tr>
+                  ) : (
+                    users.map(u => (
+                      <tr key={u.id}>
+                        <td>{u.id}</td>
+                        <td style={{ fontWeight: 600 }}>{u.name}</td>
+                        <td>{u.email}</td>
+                        <td>
+                          <span 
+                            className="activity-badge" 
+                            style={{ 
+                              background: u.role === 'ADMIN' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)', 
+                              color: u.role === 'ADMIN' ? 'var(--danger)' : 'var(--success)',
+                              fontWeight: 700
+                            }}
+                          >
+                            {u.role}
+                          </span>
+                        </td>
+                        <td>
+                          {u.role === 'ADMIN' ? (
+                            <span style={{ color: 'var(--text-dim)' }}>N/A (Admin)</span>
+                          ) : (!u.groups || u.groups.length === 0) ? (
+                            <span style={{ color: 'var(--text-dim)' }}>No groups joined</span>
+                          ) : (
+                            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                              {u.groups.map(g => (
+                                <span 
+                                  key={g.id} 
+                                  className="activity-badge in-progress" 
+                                  style={{ background: 'rgba(6, 182, 212, 0.12)', color: 'var(--accent-secondary)', fontSize: '0.75rem' }}
+                                >
+                                  {g.name}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </td>
+                        <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -1004,6 +1080,14 @@ export default function AdminDashboard() {
         >
           <Users size={16} />
           <span>Groups & Rosters</span>
+        </button>
+
+        <button 
+          onClick={() => setActiveTab('users')} 
+          className={`admin-sidebar-btn ${activeTab === 'users' ? 'active' : ''}`}
+        >
+          <Users size={16} />
+          <span>Users List</span>
         </button>
 
         <button 

@@ -272,6 +272,13 @@ export const api = {
     return data;
   },
 
+  getUsers: async () => {
+    const res = await fetch(`${API_URL}/admin/users`, { headers: getHeaders() });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to fetch users list.');
+    return data;
+  },
+
   getAdminLogs: async (filters = {}) => {
     const params = new URLSearchParams(filters);
     const res = await fetch(`${API_URL}/admin/logs?${params.toString()}`, { headers: getHeaders() });

@@ -25,6 +25,30 @@ router.get('/students', authenticateToken, requireRole('ADMIN'), async (req, res
   }
 });
 
+// Retrieve all users (Admin only)
+router.get('/users', authenticateToken, requireRole('ADMIN'), async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        groups: { select: { id: true, name: true } }
+      },
+      orderBy: [
+        { role: 'asc' },
+        { name: 'asc' }
+      ]
+    });
+    res.json(users);
+  } catch (error) {
+    console.error('Fetch user list error:', error);
+    res.status(500).json({ error: 'Failed to fetch user list.' });
+  }
+});
+
 // Retrieve activity completion & chat logs (Admin only)
 // Supports filtering by groupId, studentId, and activityId
 router.get('/logs', authenticateToken, requireRole('ADMIN'), async (req, res) => {
