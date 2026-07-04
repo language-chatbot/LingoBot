@@ -62,6 +62,35 @@ body.light-mode {
   --accent-glow-secondary: rgba(221, 219, 203, 0.3);
 }
 
+body.light-mode .chat-bubble.assistant {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #050505;
+}
+
+body.light-mode .user-badge {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #050505;
+}
+
+body.light-mode .tagger-selection-box {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--accent-primary);
+  color: #050505;
+}
+
+body.light-mode .glossary-tooltip-overlay {
+  background: #ffffff;
+  border-color: var(--accent-primary);
+  color: #050505;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .glossary-tooltip-overlay h4 {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
 /* Reset and Core Setup */
 * {
   margin: 0;
@@ -520,7 +549,7 @@ a:hover {
 .left-pane {
   flex: 1.2;
   border-right: 1px solid var(--glass-border);
-  background: hsl(222, 47%, 4%);
+  background: var(--bg-dark);
 }
 
 .right-pane {
@@ -807,7 +836,7 @@ a:hover {
   flex: 1;
   padding: 2.5rem;
   overflow-y: auto;
-  background: hsl(222, 47%, 4%);
+  background: var(--bg-dark);
 }
 
 .admin-header-row {
