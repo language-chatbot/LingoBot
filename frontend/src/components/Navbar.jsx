@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { LogOut, GraduationCap, LayoutDashboard, User } from 'lucide-react';
+import { LogOut, GraduationCap, LayoutDashboard, User, Sun, Moon } from 'lucide-react';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -9,6 +9,21 @@ export default function Navbar() {
   const token = localStorage.getItem('token');
   const userJson = localStorage.getItem('user');
   const user = userJson ? JSON.parse(userJson) : null;
+
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light-mode');
+    } else {
+      document.body.classList.remove('light-mode');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -52,6 +67,15 @@ export default function Navbar() {
             </span>
           )}
         </div>
+
+        <button 
+          onClick={toggleTheme} 
+          className="btn btn-secondary btn-sm" 
+          title="Toggle Theme"
+          style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
 
         <button onClick={handleLogout} className="btn btn-secondary btn-sm" title="Log Out">
           <LogOut size={16} />

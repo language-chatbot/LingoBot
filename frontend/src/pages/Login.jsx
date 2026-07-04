@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
-import { GraduationCap, Lock, Mail, AlertCircle, HelpCircle, User } from 'lucide-react';
+import { GraduationCap, Lock, Mail, AlertCircle, HelpCircle, User, Sun, Moon } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,6 +12,21 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showHelper, setShowHelper] = useState(true);
+
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light-mode');
+    } else {
+      document.body.classList.remove('light-mode');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +72,15 @@ export default function Login() {
 
   return (
     <div className="auth-page">
+      <button 
+        onClick={toggleTheme} 
+        className="btn btn-secondary" 
+        style={{ position: 'fixed', top: '1.5rem', right: '1.5rem', padding: '0.6rem', borderRadius: '50%', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        title="Toggle Theme"
+      >
+        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
+
       <div className="glass-card auth-card">
         <div className="auth-header">
           <div className="flex-center margin-bottom-1" style={{ color: 'var(--accent-primary)' }}>
