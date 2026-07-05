@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
-import { GraduationCap, Lock, Mail, AlertCircle, HelpCircle, User, Sun, Moon } from 'lucide-react';
+import { GraduationCap, Lock, Mail, AlertCircle, User, Sun, Moon } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,7 +11,6 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showHelper, setShowHelper] = useState(true);
 
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
@@ -180,36 +179,6 @@ export default function Login() {
             {isSignUp ? 'Sign In' : 'Sign Up'}
           </button>
         </div>
-
-        {showHelper && (
-          <div className="margin-top-2" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '1rem', borderRadius: 'var(--border-radius-md)' }}>
-            <div className="flex-between margin-bottom-1">
-              <span className="flex-center" style={{ gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-secondary)' }}>
-                <HelpCircle size={14} />
-                Demo Credentials
-              </span>
-              <button 
-                onClick={() => setShowHelper(false)} 
-                style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: '0.75rem', cursor: 'pointer' }}
-              >
-                Hide
-              </button>
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <div>
-                <strong>Teacher Admin:</strong><br />
-                Email: <code style={{ color: 'var(--text-main)' }}>admin@example.com</code><br />
-                Password: <code style={{ color: 'var(--text-main)' }}>password123</code>
-              </div>
-              <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.05)' }} />
-              <div>
-                <strong>Student Alice:</strong><br />
-                Email: <code style={{ color: 'var(--text-main)' }}>student@example.com</code><br />
-                Password: <code style={{ color: 'var(--text-main)' }}>password123</code>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
