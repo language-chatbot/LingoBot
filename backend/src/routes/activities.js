@@ -10,7 +10,9 @@ const router = express.Router();
 router.get('/', authenticateToken, async (req, res) => {
   try {
     if (req.user.role === 'ADMIN') {
+      const activeGroupId = req.query.groupId ? parseInt(req.query.groupId) : null;
       const activities = await prisma.activity.findMany({
+        where: activeGroupId ? { groupId: activeGroupId } : undefined,
         include: {
           group: { select: { name: true } },
           content: { select: { id: true, type: true, fileUrl: true } }
