@@ -326,10 +326,6 @@ export default function ActivityViewer() {
             <MessageSquare size={18} style={{ color: 'var(--accent-primary)' }} />
             <span style={{ fontWeight: 600 }}>LingoBot Chat</span>
           </div>
-          <span className="flex-center" style={{ gap: '0.3rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            <Sparkles size={12} style={{ color: 'var(--accent-secondary)' }} />
-            OpenAI Enabled
-          </span>
         </div>
 
         <div className="chat-container">
