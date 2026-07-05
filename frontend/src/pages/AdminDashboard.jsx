@@ -45,6 +45,7 @@ export default function AdminDashboard() {
   const [actGroupId, setActGroupId] = useState('');
   const [actContentId, setActContentId] = useState('');
   const [actOrder, setActOrder] = useState('');
+  const [activityFilterGroup, setActivityFilterGroup] = useState('');
 
   // Logs & Monitor filter state
   const [filterGroup, setFilterGroup] = useState('');
@@ -805,8 +806,25 @@ export default function AdminDashboard() {
 
             {/* Activities List table */}
             <div className="glass-card">
-              <h3 className="margin-bottom-1">Cohort Map Checklist Paths</h3>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>List of activities currently published across all cohorts.</p>
+              <div className="flex-between margin-bottom-1" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                  <h3 className="margin-bottom-1">Cohort Map Checklist Paths</h3>
+                  <p style={{ color: 'var(--text-muted)' }}>List of activities currently published in selected cohorts.</p>
+                </div>
+                <div style={{ minWidth: '220px' }}>
+                  <label className="form-label" style={{ marginBottom: '0.2rem' }}>Filter by Cohort</label>
+                  <select 
+                    className="form-input form-select"
+                    value={activityFilterGroup}
+                    onChange={(e) => setActivityFilterGroup(e.target.value)}
+                  >
+                    <option value="">All Cohorts</option>
+                    {groups.map(g => (
+                      <option key={g.id} value={g.id}>{g.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
               <div className="table-wrapper">
                 <table className="data-table">
@@ -821,35 +839,37 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {activities.length === 0 ? (
+                    {activities.filter(act => !activityFilterGroup || act.groupId === parseInt(activityFilterGroup)).length === 0 ? (
                       <tr>
                         <td colSpan={6} className="text-center" style={{ color: 'var(--text-muted)' }}>
-                          No activities created yet.
+                          No activities published for the selected cohort.
                         </td>
                       </tr>
                     ) : (
-                      activities.map(act => (
-                        <tr key={act.id}>
-                          <td style={{ fontWeight: 600 }}>{act.group?.name}</td>
-                          <td>{act.orderIndex}</td>
-                          <td>{act.title}</td>
-                          <td>
-                            <span className="activity-badge completed" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)' }}>
-                              {act.type}
-                            </span>
-                          </td>
-                          <td>Asset ID: {act.contentId}</td>
-                          <td>
-                            <button 
-                              onClick={() => handleDeleteActivity(act.id)}
-                              className="btn btn-danger btn-sm"
-                              style={{ padding: '0.3rem' }}
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      activities
+                        .filter(act => !activityFilterGroup || act.groupId === parseInt(activityFilterGroup))
+                        .map(act => (
+                          <tr key={act.id}>
+                            <td style={{ fontWeight: 600 }}>{act.group?.name}</td>
+                            <td>{act.orderIndex}</td>
+                            <td>{act.title}</td>
+                            <td>
+                              <span className="activity-badge completed" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)' }}>
+                                {act.type}
+                              </span>
+                            </td>
+                            <td>Asset ID: {act.contentId}</td>
+                            <td>
+                              <button 
+                                onClick={() => handleDeleteActivity(act.id)}
+                                className="btn btn-danger btn-sm"
+                                style={{ padding: '0.3rem' }}
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))
                     )}
                   </tbody>
                 </table>
